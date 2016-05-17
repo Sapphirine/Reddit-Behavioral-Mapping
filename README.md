@@ -18,3 +18,7 @@ Dependencies:
     
 Note:
     All code written for demonstration during our presentation is located in respective src/ folders and is named *_demo.py.  The tests/ folders contain scratch scripts.  The utils/ folders contain useful scripts not necessary to run code in src/.  READMEs for specific modules are within the root directory  of their respective modules.
+    
+    To run code on a cluster, type:
+    
+    /path/to/spark/bin/spark-submit --master spark://localhost:7077 --driver-class-path /path/to/jar/sqlite-jdbc-3.8.11.2.jar pythonfile.py
