@@ -1,5 +1,8 @@
 EECSE6895 Group 37 Final Project Submission.
 
+License:
+    All code is distributed under the Apache License V2.0.  More information can be found here at http://www.apache.org/licenses/ and in the accompanying License file.
+
 Group Members:
     Marshall Van Loon (mhv2109)
     Palash Matey (pm2824)
