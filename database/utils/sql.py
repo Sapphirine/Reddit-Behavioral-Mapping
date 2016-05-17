@@ -1,9 +1,3 @@
-"""
-IMPORTANT: update path to database.  On my setup, I have a NFS mounted 
-at /data that has my database in it.
-"""
-DATABASE_PATH = "/data/Reddit2.db"
-
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Table, Column, Integer, String, Boolean, ForeignKey, create_engine
 from sqlalchemy.orm import relationship, backref, sessionmaker
@@ -285,14 +279,13 @@ class Comment_user_report(Base):
     # Owning comment
     comment_id              = Column(String, ForeignKey("Comments.id"))
     comment                 = relationship("Comment", back_populates="user_reports")
-    
 
 """
 Funcs
 """
 
 # Define engine
-engine = create_engine(''.join(['sqlite://', DATABASE_PATH]), echo=True) # 'sqlite:///:memory:' puts a database in RAM
+engine = create_engine('sqlite:///test.db', echo=True) # 'sqlite:///:memory:' puts a database in RAM
 Base.metadata.create_all(engine)
 
 # Create a session to link to the db
@@ -326,75 +319,27 @@ def put_oembed(id, submission):
     # If empty
     if not submission:
         return None
-    
-    # Check if exists
-    oembed = session.query(Oembed).filter_by(id=encode(id)).first()
-    if not oembed:
-        # Intitialize table
-        oembed = Oembed(id=encode(id))
+
+    # Intitialize table
+    oembed = Oembed(id=encode(id))
 
     # Define fields
-    try:
-        oembed.author_name             = encode(submission['author_name'])
-    except:
-        pass
-    try:
-        oembed.author_url              = encode(submission['author_url'])
-    except:
-        pass
-    try:
-        oembed.description             = encode(submission['description'])
-    except:
-        pass
-    try:
-        oembed.height                  = encode(submission['height'])
-    except:
-        pass
-    try:
-        oembed.html                    = encode(submission['html'])
-    except:
-        pass
-    try:
-        oembed.provider_name           = encode(submission['provider_name'])
-    except:
-        pass
-    try:
-        oembed.provider_url            = encode(submission['provider_url'])
-    except:
-        pass
-    try:
-        oembed.thumbnail_height        = encode(submission['thumbnail_height'])
-    except:
-        pass
-    try:
-        oembed.thumbnail_url           = encode(submission['thumbnail_url'])
-    except:
-        pass
-    try:
-        oembed.thumbnail_width         = encode(submission['thumbnail_width'])
-    except:
-        pass
-    try:
-        oembed.title                   = encode(submission['title'])
-    except:
-        pass
-    try:
-        oembed.type                    = encode(submission['type'])
-    except:
-        pass
-    try:
-        oembed.url                     = encode(submission['url'])
-    except:
-        pass
-    try:
-        oembed.version                 = encode(submission['version'])
-    except:
-        pass
-    try:
-        oembed.width                   = encode(submission['width'])
-    except:
-        pass
-    
+    oembed.author_name             = encode(submission['author_name'])
+    oembed.author_url              = encode(submission['author_url'])
+    oembed.description             = encode(submission['description'])
+    oembed.height                  = encode(submission['height'])
+    oembed.html                    = encode(submission['html'])
+    oembed.provider_name           = encode(submission['provider_name'])
+    oembed.provider_url            = encode(submission['provider_url'])
+    oembed.thumbnail_height        = encode(submission['thumbnail_height'])
+    oembed.thumbnail_url           = encode(submission['thumbnail_url'])
+    oembed.thumbnail_width         = encode(submission['thumbnail_width'])
+    oembed.title                   = encode(submission['title'])
+    oembed.type                    = encode(submission['type'])
+    oembed.url                     = encode(submission['url'])
+    oembed.version                 = encode(submission['version'])
+    oembed.width                   = encode(submission['width'])
+
     # Add to DB queue
     session.add(oembed)
 
@@ -405,22 +350,13 @@ def put_media(id, submission):
     # If empty
     if not submission:
         return None
-    
-    # Check if exists
-    media = session.query(Media).filter_by(id=encode(id)).first()
-    if not media:
-        # Initialize table
-        media = Media(id=encode(id))
+
+    # Initialize table
+    media = Media(id=encode(id))
 
     # Define fields
-    try:
-        media.oembed                   = put_oembed(id, submission['oembed'])
-    except:
-        pass
-    try:
-        media.type                     = encode(submission['type'])
-    except:
-        pass
+    media.oembed                   = put_oembed(id, submission['oembed'])
+    media.type                     = encode(submission['type'])
 
     # Add to DB queue
     session.add(media)
@@ -433,29 +369,14 @@ def put_media_embed(id, submission):
     if not submission:
         return None
 
-    # Check if exists
-    media_embed = session.query(Media_embed).filter_by(id=encode(id)).first()
-    if not media_embed:
-        # Initialize table
-        media_embed = Media_embed(id=encode(id))
+    # Initialize table
+    media_embed = Media_embed(id=encode(id))
 
     # Define fields
-    try:
-        media_embed.content            = encode(submission['content'])
-    except:
-        pass
-    try:
-        media_embed.width              = encode(submission['width'])
-    except:
-        pass
-    try:
-        media_embed.height             = encode(submission['height'])
-    except:
-        pass
-    try:
-        media_embed.scrolling          = encode(submission['scrolling'])
-    except:
-        pass
+    media_embed.content            = encode(submission['content'])
+    media_embed.width              = encode(submission['width'])
+    media_embed.height             = encode(submission['height'])
+    media_embed.scrolling          = encode(submission['scrolling'])
 
     # Add to DB queue
     session.add(media_embed)
@@ -468,11 +389,8 @@ def put_thread_mod_report(id, submission):
     if not submission:
         return None
 
-    # Check if exists
-    mod_report = session.query(Thread_mod_report).filter_by(id=encode(id)).first()
-    if not mod_report:
-        # Initialize table
-        mod_report = Thread_mod_report(id=encode(id))
+    # Initialize table
+    mod_report = Thread_mod_report(id=encode(id))
 
     # Define fields
     mod_report.value               = encode(submission)
@@ -488,21 +406,12 @@ def put_secure_media(id, submission):
     if not submission:
         return None
 
-    # Check if exists
-    secure_media = session.query(Secure_media).filter_by(id=encode(id)).first()
-    if not secure_media:
-        # Intitialize table
-        secure_media = Secure_media(id=encode(id))
+    # Intitialize table
+    secure_media = Secure_media(id=encode(id))
 
     # Define fields
-    try:
-        secure_media.oembed            = put_oembed(id, submission['oembed'])
-    except:
-        pass
-    try:
-        secure_media.type              = encode(submission['type'])
-    except:
-        pass
+    secure_media.oembed            = put_oembed(id, submission['oembed'])
+    secure_media.type              = encode(submission['type'])
 
     # Add to DB queue
     session.add(secure_media)
@@ -514,31 +423,16 @@ def put_secure_media_embed(id, submission):
     # If empty
     if not submission:
         return None
-    
-    #Check if exists
-    secure_media_embed = session.query(Secure_media_embed).filter_by(id=encode(id)).first()
-    if not secure_media_embed:
-        # Initialize table
-        secure_media_embed = Secure_media_embed(id=encode(id))
+
+    # Initialize table
+    secure_media_embed = Secure_media_embed(id=encode(id))
 
     # Define fields
-    try:
-        secure_media_embed.content            = encode(submission['content'])
-    except:
-        pass
-    try:
-        secure_media_embed.width              = encode(submission['width'])
-    except:
-        pass
-    try:
-        secure_media_embed.height             = encode(submission['height'])
-    except:
-        pass
-    try:
-        secure_media_embed.scrolling          = encode(submission['scrolling'])
-    except:
-        pass
-    #secure_media_embed.allowfullscreen    = encode(submission['allowfullscreen'])
+    secure_media_embed.content            = encode(submission['content'])
+    secure_media_embed.width              = encode(submission['width'])
+    secure_media_embed.height             = encode(submission['height'])
+    secure_media_embed.scrolling          = encode(submission['scrolling'])
+    secure_media_embed.allowfullscreen    = encode(submission['allowfullscreen'])
 
     # Add to DB queue
     session.add(secure_media_embed)
@@ -551,11 +445,8 @@ def put_thread_user_report(id, submission):
     if not submission:
         return None
 
-    # Check if exists
-    user_report = session.query(Thread_user_report).filter_by(id=encode(id)).first()
-    if not user_report:
-        # Initialize table
-        user_report = Thread_user_report(id=encode(id))
+    # Initialize table
+    user_report = Thread_user_report(id=encode(id))
 
     # Define fields
     user_report.value                = encode(submission)
@@ -570,12 +461,9 @@ def put_comment_mod_report(id, submission):
     # If empty
     if not submission:
         return None
-    
-    # Check if exists
-    mod_report = session.query(Comment_mod_report).filter_by(id=encode(id)).first()
-    if not mod_report:
-        # Initialize table
-        mod_report = Comment_mod_report(id=encode(id))
+
+    # Initialize table
+    mod_report = Comment_mod_report(id=encode(id))
 
     # Define fields
     mod_report.value               = encode(submission)
@@ -590,12 +478,9 @@ def put_comment_user_report(id, submission):
     # If empty
     if not submission:
         return None
-    
-    # Check if exists
-    user_report = session.query(Comment_user_report).filter_by(id=encode(id)).first()
-    if not user_report:
-        # Initialize table
-        user_report = Comment_user_report(id=encode(id))
+
+    # Initialize table
+    user_report = Comment_user_report(id=encode(id))
 
     # Define fields
     user_report.value               = encode(submission)
@@ -606,16 +491,13 @@ def put_comment_user_report(id, submission):
     return user_report
 
 def put_comment(submission):
-    
+
     # If empty
     if not submission:
         return None
 
-    # Check if exists
-    comment = session.query(Comment).filter_by(id=encode(submission.id)).first()
-    if not comment:
-        # Initialize table
-        comment = Comment(id=encode(submission.id))
+    # Initialize table
+    comment = Comment(id=encode(submission.id))
 
     # Take care of PRAW objects
     author = encode(submission.author.name) if isinstance(submission.author, praw.objects.Redditor) else encode(submission.author)
@@ -654,15 +536,10 @@ def put_comment(submission):
 
     return comment
 
-def put_thread(submission, fast=False):
+def put_thread(submission):
 
-    # Check if exists
-    thread = session.query(Thread).filter_by(id=encode(submission.id)).first()
-    if thread and fast:
-        return
-    if not thread:
-        # Inititialize thread
-        thread = Thread(id=encode(submission.id))
+    # Inititialize thread
+    thread = Thread(id=encode(submission.id))
 
     # Take care of PRAW classes
     author = encode(submission.author.name) if isinstance(submission.author, praw.objects.Redditor) else encode(submission.author)
@@ -706,7 +583,7 @@ def put_thread(submission, fast=False):
     thread.saved                   = encode(submission.saved)
     thread.score                   = encode(submission.score)
     thread.secure_media            = put_secure_media(submission.id, submission.secure_media)
-    thread.secure_media_embed      = put_secure_media_embed(submission.id, submission.secure_media_embed)
+    thread.secure_media_embed      = put_secure_media_embed(submission.id, submission.secure_media)
     thread.selftext                = encode(submission.selftext)
     thread.selftext_html           = encode(submission.selftext_html)
     thread.stickied                = encode(submission.stickied)
@@ -727,7 +604,3 @@ def put_thread(submission, fast=False):
 
     # Commit
     session.commit()
-    
-def close_session():
-    
-    session.close()

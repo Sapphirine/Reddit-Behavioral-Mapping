@@ -1,3 +1,9 @@
+"""
+IMPORTANT: update path to database.  On my setup, I have a NFS mounted 
+at /data that has my database in it.
+"""
+DATABASE_PATH = "/data/Reddit2.db"
+
 # Spark stuff
 from pyspark import SparkConf, SparkContext
 conf = SparkConf().setMaster("local").setAppName("Reading Ease")
@@ -9,7 +15,6 @@ from pyspark.sql import SQLContext
 sqlContext = SQLContext(sc)
 
 # Load database into dataframe
-DATABASE_PATH = "/home/marshall/Dropbox/OneDrive/Documents/Columbia/AdvancedBigDataAnalytics/EECSE6895_Final_Project/database/src/Reddit2.db"
 DATABASE_ENGINE = "jdbc:sqlite:"
 Threads_df = sqlContext.read.format('jdbc').options(url=''.join([DATABASE_ENGINE, DATABASE_PATH]), dbtable='Threads').load()
 Comments_df = sqlContext.read.format('jdbc').options(url=''.join([DATABASE_ENGINE, DATABASE_PATH]), dbtable='Comments').load()

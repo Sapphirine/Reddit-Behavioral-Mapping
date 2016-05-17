@@ -1,0 +1,27 @@
+AWS configuration.  Install the AWS CLI and run 'aws configure' or add the following files:
+
+add to ~/.aws/credentials :
+
+    [default] 
+    aws_access_key_id = YOUR_ACCESS_KEY
+    aws_secret_access_key = YOUR_SECRET_KEY
+
+add to ~/.aws/config :
+
+    [default]
+    region=us-east-1
+    
+Notes for files in src/:
+    >sql.py contains the table declaration and engine for defining/updating/creating the SQL database.
+    >praw_into_sql.py is the single threaded version of the code used to place Reddit submissions into the database.  Takes arguments:
+    
+        --search-term
+        --subreddit
+        --sort
+        --syntax 
+        --period
+        --limit
+        
+    >praw_into_sql_multithreaded.py is the multithreaded version of praw_into_sql.py.  Handles multiple search terms, separated by commas.
+    
+    >demo files produce outputs used during presentation.
